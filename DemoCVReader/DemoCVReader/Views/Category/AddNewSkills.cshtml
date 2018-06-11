@@ -1,0 +1,91 @@
+﻿@model DemoCVReader.Models.SkillModel
+
+@{
+    ViewBag.Title = "Add Skill";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+<script src="~/Scripts/jquery.validate.js"></script>
+<div>
+   <div class="title">Add a Skill  </div>
+</div>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+
+        @Html.ValidationSummary(true)
+        <!-- button to trigger the action -->
+       <div class="form-group">
+            <label for="Username" class="bmd-label-floating">Select a category for Skill</label>
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.CategoryID, new SelectList(Model.GetAllCategories(), "CategoryId", "Name", "Select"), "Select a Category", new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.CategoryID)
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="SkillName" class="bmd-label-floating">Skill Name</label>
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.Skill_name, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Skill_name )
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="SkillDescription" class="bmd-label-floating">Description</label>
+            <div class="col-md-10">
+
+                @Html.TextBoxFor(model => model.Skill_description, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Skill_description)
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="Rating" class="bmd-label-floating">Rating <span id="ratingtag" class="badge badge-info">@Model.Skill_rating</span></label>
+            <div class="col-md-10">
+                <div id="sliderRegular" class="slider slider-rose"></div>
+                @Html.HiddenFor(model => model.Skill_rating, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Skill_rating)
+            </div>
+        </div>
+        <center>
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Create" class="btn btn-info" /> <a href="/Category/Index" class="btn btn-info">Show all Skills</a>
+                </div>
+            </div>
+        </center>
+    </div>
+}
+
+
+<link href="~/assets/css/nouislider.min.css" rel="stylesheet" />
+<script src="~/assets/js/plugins/nouislider.js"></script>
+<script type="text/javascript">
+
+    var slider = document.getElementById('sliderRegular');
+    var value = @Model.Skill_rating
+    noUiSlider.create(slider, {
+        start: value,
+        connect: true,
+        range: {
+            'min': 0,
+            'max': 10
+        }
+
+    });
+
+    // When the slider value changes, update the input and span
+    slider.noUiSlider.on('update', function (values, handle) {
+        var min = parseInt(values[0]);
+
+        $("#Skill_rating").val(min);
+        $("#ratingtag").html(min);
+
+    });
+
+
+</script>

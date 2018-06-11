@@ -1,0 +1,70 @@
+﻿@model IEnumerable<DemoCVReader.Category>
+
+@{
+    ViewBag.Title = "GetAllSkills";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+
+<div>
+    <h2 class="title">List Of All Skills</h2>
+</div>
+
+    @foreach (Category item in Model)
+   {
+        <div class="main main-raised" >
+    <div class="card card-nav-tabs">
+
+
+        <div class="card-header card-header-warning">
+            @item.Name
+        </div>
+
+        <div class="card-body">
+            <h4 class="card-title">@item.Description</h4>
+            @foreach (SkillSet skill in item.SkillSet)
+            {
+                <button class="btn btn-info" data-toggle="popover" title="@item.Name - @skill.Name" data-content="@skill.Description">@skill.Name</button>
+            }
+        </div>
+    </div>
+    </div>
+    <div style="margin:5px">&nbsp;</div>
+    }
+
+
+@*<table class="table">
+    <tr class="bg-dark">
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Description)
+        </th>
+        <th>
+        </th>
+    </tr>
+
+    @foreach (Category item in Model)
+    {
+        <tr class="bg-white">
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+
+        </tr>
+        <tr>
+            <td colspan="3">
+                <div id=@string.Format("#demo{0}",@item.CategoryId) class="row">
+                    @foreach (SkillSet skill in item.SkillSet)
+                    {
+                        <button class="btn btn-info" data-toggle="popover" title="@item.Name - @skill.Name" data-content="@skill.Description">@skill.Name</button>
+                    }
+                </div>
+            </td>
+        </tr>
+    }
+
+</table>*@
