@@ -18,6 +18,8 @@ namespace DemoCVReader
         public Nullable<int> CustomerId { get; set; }
         public string TextualData { get; set; }
         public Nullable<short> Rating { get; set; }
+        public System.DateTime CreatedOn { get; set; }
+        public byte[] FileBytes { get; set; }
     
         public virtual Customer Customer { get; set; }
     }
