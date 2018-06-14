@@ -5,60 +5,54 @@
     Layout = "~/Views/Shared/_LayoutPage.cshtml";
 }
 
+<style type="text/css">
+.columndata {
+    float: left;
+    width: 50%;
+}
 
-        <div class="title">
-            <h4 class="title">Analysis Report</h4>
-        </div>
-
-        <br />
-        @if (Model != null)
-        {
-            <div class="row">
-                @foreach (var item in Model)
-                {
-
-                    <div class="col-md-3 card card-nav-tabs" style="margin-left:20px">
-                        <h4 class="card-header card-header-info">@item.Category</h4>
-                        <div class="card-body">
-                            <h4 class="card-title">These Skills Are Mentioned in your CV</h4>
-
-                            @{
-                    string[] skillsset = item.Skills.Split(',');
-                    <div class="row">
-                        @foreach (string skill in skillsset)
-                        {
-                            <a href="#" class="btn btn-info btn-round">@skill</a>
-
-                        }
-                    </div>
-                            }
-                        </div>
-                    </div>
-
-                }
-            </div>
-
-        }
-        else
-        {
-
-            <div class="card card-nav-tabs text-center">
-                <div class="card-header card-header-primary">
-                    Anaysis found no results for your Upload.
-                </div>
-                <div class="card-body">
-                    <h4 class="card-title">Please Correct Following Reasons.</h4>
-                    <p class="card-text">1. Make Sure you uplaoded *.Pdf File</p>
-                    <p class="card-text">2. No Scanned Pdf is not supported</p>
-                    <p class="card-text">3. Either skill set not metioned in your DB.</p>
-                    <p class="card-text">4. CV uploaded has no such information.</p>
-                    <a href="/Home/Index" class="btn btn-primary">Upload Another Resume</a>
-                </div>
-                <div class="card-footer text-muted">
-                    Thanks.
-                </div>
-            </div>
+/* Clear floats after the columns */
+.rowss:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+</style>
 
 
-        }
-    
+<div class="title">
+    <h4 class="title">Analysis Report</h4>
+</div>
+
+<div class="rowss">
+    <div class="columndata">
+@foreach (var item in Model)
+    {
+
+    <span class="btn btn-rose btn-raised" >@item.Category <span class="badge badge-success">New</span></span>    
+<ul class="list-group">
+@{
+    string[] skillsset = item.Skills.Split(',');
+    foreach (string skill in skillsset)
+    {
+        <li class="list-group-item rounded">@skill</li>
+
+    }
+}
+</ul>
+
+}
+
+    </div>
+    <div class="columndata">
+
+        <iframe id='iframe2' frameborder="0" style="width:600px;height:700px" src="@ViewBag.PdfFile"></iframe>
+
+    </div>
+</div>
+
+
+
+
+
+

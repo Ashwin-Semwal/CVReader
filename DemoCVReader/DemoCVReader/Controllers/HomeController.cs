@@ -19,6 +19,22 @@ namespace DemoCVReader.Controllers
         {
             CustomerModel cust = new CustomerModel();
             return View(cust);
+
+        }
+
+        [HttpGet]
+        public ActionResult UploadCV(int? id)
+        {
+            if(!id.HasValue)
+            {
+                id = 1;
+            }
+            List<sp_AnalyseSkillSetForTextualInfo_Result> skillsetReport = null;
+
+            string CVtextualInfo = GetCvINfoByCustomerId(id).TextualData;
+            skillsetReport = FetchReport(CVtextualInfo);
+            ViewBag.PdfFile = GetPdfContent(id);
+            return View(skillsetReport);
         }
 
         [HttpPost]
@@ -62,9 +78,18 @@ namespace DemoCVReader.Controllers
                 List<sp_AnalyseSkillSetForTextualInfo_Result> skillsetReport = null;
                     string CVtextualInfo = ParsePdf(tempData);
                     skillsetReport = FetchReport(CVtextualInfo);
-                
 
-              
+
+                    Customer NewCustomer = AddCustomer(model);
+                    CVInfo cv = new CVInfo();
+                    cv.CreatedOn = DateTime.UtcNow;
+                    cv.CustomerId = NewCustomer.CustomerId;
+                    cv.FileBytes = tempData;
+                    cv.Rating = 0;
+                    cv.TextualData = CVtextualInfo;
+                    CVInfo sav =  AddCVInfo(cv);
+                    ViewBag.PdfFile = GetPdfContent(sav.Id);
+                
 
                 return View(skillsetReport);
         
@@ -75,6 +100,57 @@ namespace DemoCVReader.Controllers
                 return View("Index",model);
             }
 
+        }
+
+        public string GetPdfContent(int? id)
+        {
+            //id = 1;
+            byte[] fileContent = GetCvINfoByCustomerId(id).FileBytes;
+            string path = Server.MapPath("~/TempPdf/Random.pdf");
+            System.IO.File.WriteAllBytes(path,fileContent);
+            return "/TempPdf/Random.pdf";
+
+        }
+
+        private CVInfo GetCvINfoByCustomerId(int? id)
+        {
+            using (var context = new SoftProEntites())
+            {
+                if (id.HasValue)
+                {
+                    return context.CVInfo.Where(cv => cv.CustomerId == id.Value).FirstOrDefault();
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        }
+
+        private CVInfo AddCVInfo(CVInfo cv)
+        {
+            using (var context = new SoftProEntites())
+            {
+              var cvinfo=  context.CVInfo.Add(cv);
+                context.SaveChanges();
+                return cvinfo;
+            }
+
+        }
+
+        private Customer AddCustomer(CustomerModel model)
+        {
+            using(var context = new SoftProEntites())
+            {
+                Customer cust = new Customer();
+                cust.EmailId = model.EmailId;
+                cust.PasswordHash = model.PasswordHash;
+                cust.SaltKey = model.SaltKey;
+                cust.Username = model.Username;
+                var customer = context.Customer.Add(cust);
+                context.SaveChanges();
+                return customer;
+            }
         }
 
         bool IsValidEmail(string email)
